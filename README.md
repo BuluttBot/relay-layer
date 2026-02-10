@@ -46,6 +46,33 @@ Unlike generic PM tools, Relay layeR is designed around the concept of autonomou
 - [Event Protocol](docs/EVENT_PROTOCOL.md)
 - [Structural Design](docs/STRUCTURE.md)
 
+## Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Build all packages
+npm run build
+
+# Initialize database
+npm run db:init
+
+# Development
+npm run dev:api   # API on :3001
+npm run dev:web   # Frontend on :3000
+
+# Production
+pm2 start deploy/ecosystem.config.cjs
+```
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+- `TELEGRAM_BOT_TOKEN` — Bot token for auth code delivery
+- `RELAY_API_KEY` — API key for agent event ingestion
+- `SESSION_SECRET` — Random 64-char hex for session signing
+
 ## Status
 
-🟡 Planning Phase
+🟢 MVP Built — Core Kanban + Auth + API + WebSocket + Dashboard

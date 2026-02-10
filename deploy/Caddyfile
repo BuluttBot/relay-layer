@@ -1,0 +1,20 @@
+relay.kukso.com {
+  handle /api/* {
+    reverse_proxy localhost:3001
+  }
+
+  handle /ws {
+    reverse_proxy localhost:3001
+  }
+
+  handle {
+    reverse_proxy localhost:3000
+  }
+
+  header {
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    X-XSS-Protection "1; mode=block"
+    Referrer-Policy "strict-origin-when-cross-origin"
+  }
+}
