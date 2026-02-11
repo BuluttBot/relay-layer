@@ -42,5 +42,12 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      addUtilities({
+        '.transition-fast': { transition: 'all 150ms ease-in-out' },
+        '.transition-normal': { transition: 'all 250ms ease-in-out' },
+      })
+    }
+  ],
 };

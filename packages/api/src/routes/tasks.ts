@@ -3,6 +3,8 @@ import { requireAuth } from '../middleware/auth.js';
 import * as taskService from '../services/taskService.js';
 import { broadcast } from '../ws/server.js';
 import { createTaskSchema, updateTaskSchema } from '@relay-layer/shared';
+import { getDb } from '../db/client.js';
+import { nanoid } from 'nanoid';
 
 export async function taskRoutes(app: FastifyInstance) {
   app.addHook('preHandler', requireAuth);
@@ -32,6 +34,34 @@ export async function taskRoutes(app: FastifyInstance) {
     }
     const task = taskService.createTask({ ...data, created_by: 'burak' });
     broadcast('task_update', task);
+
+    // Insert system.broadcast event
+    const db = getDb();
+    const eventId = `evt_${nanoid(16)}`;
+    const timestamp = new Date().toISOString();
+    db.prepare(`INSERT INTO events (id, type, timestamp, source_agent_id, source_agent_name, project_id, payload, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).run(
+      eventId,
+      'system.broadcast',
+      timestamp,
+      'burak',
+      'Burak',
+      task.project_id,
+      JSON.stringify({ taskId: task.id, title: task.title, priority: task.priority }),
+      '0.1.0'
+    );
+
+    // Broadcast event via WebSocket
+    setImmediate(() => {
+      broadcast('event', {
+        id: eventId,
+        type: 'system.broadcast',
+        timestamp,
+        source: { agentId: 'burak', agentName: 'Burak' },
+        projectId: task.project_id,
+        payload: { taskId: task.id, title: task.title, priority: task.priority }
+      });
+    });
+
     return reply.code(201).send(task);
   });
 

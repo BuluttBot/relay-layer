@@ -93,7 +93,11 @@ export async function eventRoutes(app: FastifyInstance) {
       );
     }
 
-    broadcast('event', { id, type: event.type, timestamp, source: event.source, projectId: event.projectId, payload: event.payload });
+    // Broadcast asynchronously (non-blocking)
+    setImmediate(() => {
+      broadcast('event', { id, type: event.type, timestamp, source: event.source, projectId: event.projectId, payload: event.payload });
+    });
+    
     return reply.code(201).send({ id, type: event.type });
   });
 

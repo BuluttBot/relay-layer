@@ -38,29 +38,29 @@ export default function StatsPanel() {
   if (!open) return null;
 
   return (
-    <div className="absolute inset-0 z-30 bg-bg-primary/95 backdrop-blur-sm overflow-y-auto p-8">
+    <div className="absolute inset-0 z-30 bg-bg-primary/95 backdrop-blur-sm overflow-y-auto p-4 md:p-8">
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
           <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
             <BarChart3 size={22} className="text-accent-purple" /> Statistics
           </h2>
-          <button onClick={() => close('statsOpen')} className="p-2 rounded-lg hover:bg-bg-tertiary transition-fast">
+          <button onClick={() => close('statsOpen')} className="p-2 rounded-lg hover:bg-bg-tertiary transition-fast min-h-[44px] min-w-[44px] flex items-center justify-center">
             <X size={18} className="text-text-secondary" />
           </button>
         </div>
 
         {overview && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
             {[
               { label: 'Total Tasks', value: overview.total_tasks, icon: <Layers size={18} />, color: 'text-accent-purple' },
               { label: 'Completed', value: overview.completed_tasks, icon: <TrendingUp size={18} />, color: 'text-accent-teal' },
               { label: 'Active Agents', value: overview.active_agents, icon: <Users size={18} />, color: 'text-accent-blue' },
               { label: 'Total Cost', value: formatCost(overview.total_cost), icon: <BarChart3 size={18} />, color: 'text-accent-amber' },
             ].map(card => (
-              <div key={card.label} className="bg-bg-secondary border border-border-subtle rounded-xl p-4">
+              <div key={card.label} className="bg-bg-secondary border border-border-subtle rounded-xl p-3 md:p-4">
                 <div className={`${card.color} mb-2`}>{card.icon}</div>
-                <div className="text-2xl font-bold text-text-primary">{card.value}</div>
-                <div className="text-xs text-text-tertiary mt-1">{card.label}</div>
+                <div className="text-xl md:text-2xl font-bold text-text-primary">{card.value}</div>
+                <div className="text-[10px] md:text-xs text-text-tertiary mt-1">{card.label}</div>
               </div>
             ))}
           </div>

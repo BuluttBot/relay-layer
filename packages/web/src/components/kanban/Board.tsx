@@ -18,7 +18,7 @@ export default function Board() {
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto h-full px-4 py-4">
+    <div className="flex gap-4 overflow-x-auto h-full px-4 py-4 md:snap-none snap-x snap-mandatory scrollbar-thin">
       {COLUMN_CONFIG.map(col => (
         <Column
           key={col.key}

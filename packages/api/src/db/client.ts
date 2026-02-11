@@ -43,6 +43,7 @@ export function seedDb(): void {
     ['prayer', 'Dua', 'Prayer Tracker', 'Specialist', 'Tracks Ayat al-Kursi recitation goal', '🤲', '["prayer-tracking","spiritual-goals"]', 'claude-sonnet-4-20250514', 'low', 'idle'],
     ['hytale-modder', 'Simon', 'Hytale Modder', 'Specialist', 'Monitors Hytale news and modding tasks', '🎮', '["hytale","modding","game-dev"]', 'claude-sonnet-4-20250514', 'low', 'idle'],
     ['architect', 'The Architect', 'Infrastructure Engineer', 'Specialist', 'Infrastructure and systems work', '🏗️', '["infrastructure","systems","deployment"]', 'claude-sonnet-4-20250514', 'high', 'idle'],
+    ['personal_psychologist', 'Alev', 'Psychologist', 'Specialist', 'Personal psychological advisor — tracks mental health, social/family relations, provides culturally-aware guidance', '🩺', '["psychology","mental-health","cultural-awareness","CBT","ACT","pattern-recognition"]', 'google-gemini-cli/gemini-3-flash-preview', 'low', 'idle'],
   ];
 
   const insertAgent = d.prepare(
@@ -60,4 +61,5 @@ export function seedDb(): void {
   insertAP.run('personal-trainer', 'openclaw-ecosystem');
   insertAP.run('prayer', 'openclaw-ecosystem');
   insertAP.run('hytale-modder', 'openclaw-ecosystem');
+  insertAP.run('personal_psychologist', 'openclaw-ecosystem');
 }

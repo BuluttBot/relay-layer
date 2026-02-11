@@ -11,7 +11,7 @@ interface ColumnProps {
 
 export default function Column({ label, color, tasks, onCardClick }: ColumnProps) {
   return (
-    <div className="flex flex-col min-w-[280px] max-w-[320px] flex-1">
+    <div className="flex flex-col w-[calc(100vw-2rem)] md:min-w-[280px] md:max-w-[320px] md:flex-1 md:w-auto snap-center shrink-0">
       <div className="flex items-center gap-2 px-3 py-2 mb-3">
         <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
         <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary">{label}</h3>
