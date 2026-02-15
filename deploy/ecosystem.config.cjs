@@ -38,6 +38,12 @@ module.exports = {
       env: { NODE_ENV: 'production', ...env },
     },
     {
+      name: 'relay-worker',
+      cwd: './packages/worker',
+      script: 'dist/index.js',
+      env: { NODE_ENV: 'production', ...env },
+    },
+    {
       name: 'relay-caddy',
       script: '/home/bulut/.openclaw/applications/caddy',
       args: 'run --config /home/bulut/.openclaw/repos/local/relay-layer/deploy/Caddyfile',

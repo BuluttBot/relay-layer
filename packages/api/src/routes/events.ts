@@ -59,6 +59,15 @@ export async function eventRoutes(app: FastifyInstance) {
         case 'task.rejected':
           taskService.updateTask(taskId, { status: 'review' });
           break;
+        case 'task.report':
+          const reportPayload = payload as { content: string; artifacts?: unknown[] };
+          taskService.addTaskReport(taskId, {
+            agentId: event.source.agentId,
+            agentName: event.source.agentName,
+            content: reportPayload.content,
+            artifacts: reportPayload.artifacts
+          });
+          break;
       }
     }
 

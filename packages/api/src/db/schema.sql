@@ -149,3 +149,15 @@ CREATE TABLE IF NOT EXISTS auth_attempts (
 );
 
 CREATE INDEX IF NOT EXISTS idx_auth_attempts_ip ON auth_attempts(ip_address, created_at);
+
+CREATE TABLE IF NOT EXISTS task_reports (
+  id          TEXT PRIMARY KEY,
+  task_id     TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  agent_id    TEXT NOT NULL,
+  agent_name  TEXT NOT NULL,
+  content     TEXT NOT NULL,
+  artifacts   TEXT,
+  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_task_reports_task ON task_reports(task_id);

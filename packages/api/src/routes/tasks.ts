@@ -74,4 +74,15 @@ export async function taskRoutes(app: FastifyInstance) {
     broadcast('task_update', task);
     return task;
   });
+
+  app.delete('/api/tasks/:id', async (req, reply) => {
+    const { id } = req.params as { id: string };
+    const db = getDb();
+    const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id) as any;
+    if (!task) return reply.code(404).send({ error: 'Task not found' });
+    
+    db.prepare('DELETE FROM tasks WHERE id = ?').run(id);
+    broadcast('task_delete', { id });
+    return { success: true, id };
+  });
 }

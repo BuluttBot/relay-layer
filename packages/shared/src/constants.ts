@@ -14,7 +14,7 @@ export const EVENT_TYPES = [
   'task.created', 'task.assigned', 'task.started', 'task.progress',
   'task.completed', 'task.review_passed', 'task.review_failed',
   'task.awaiting_approval', 'task.approved', 'task.rejected',
-  'task.subtask_requested', 'task.subtask_created', 'task.comment',
+  'task.subtask_requested', 'task.subtask_created', 'task.comment', 'task.report',
   'agent.online', 'agent.offline', 'agent.idle', 'agent.status_changed',
   'system.broadcast', 'system.error', 'system.auth',
   'system.project_created', 'system.agent_assigned',

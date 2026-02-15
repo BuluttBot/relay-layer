@@ -9,7 +9,12 @@ export function setupWebSocket(app: FastifyInstance) {
   app.get('/ws', { websocket: true }, (socket, req) => {
     const url = new URL(req.url || '/', `http://${req.headers.host}`);
     const token = url.searchParams.get('token');
-    if (!token || !validateSession(token)) {
+    const apiKey = url.searchParams.get('apiKey');
+    
+    const isValidSession = token && validateSession(token);
+    const isValidApiKey = apiKey && process.env.RELAY_API_KEY && apiKey === process.env.RELAY_API_KEY;
+
+    if (!isValidSession && !isValidApiKey) {
       socket.close(4001, 'Unauthorized');
       return;
     }

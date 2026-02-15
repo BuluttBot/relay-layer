@@ -46,4 +46,42 @@ export async function projectRoutes(app: FastifyInstance) {
     db.prepare(`UPDATE projects SET ${fields.join(', ')} WHERE id = ?`).run(...values);
     return db.prepare('SELECT * FROM projects WHERE id = ?').get(id);
   });
+
+  app.delete('/api/projects/:id', async (req, reply) => {
+    const db = getDb();
+    const { id } = req.params as { id: string };
+    
+    const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(id) as any;
+    if (!project) return reply.code(404).send({ error: 'Project not found' });
+    
+    // Cascade delete all related data
+    // 1. Delete all task reports for tasks in this project
+    db.prepare('DELETE FROM task_reports WHERE task_id IN (SELECT id FROM tasks WHERE project_id = ?)').run(id);
+    
+    // 2. Delete all task logs for tasks in this project
+    db.prepare('DELETE FROM task_logs WHERE task_id IN (SELECT id FROM tasks WHERE project_id = ?)').run(id);
+    
+    // 3. Delete all tasks in this project
+    db.prepare('DELETE FROM tasks WHERE project_id = ?').run(id);
+    
+    // 4. Delete all agent assignments for this project (CASCADE handles this, but explicit is clearer)
+    db.prepare('DELETE FROM agent_projects WHERE project_id = ?').run(id);
+    
+    // 5. Delete all events for this project
+    db.prepare('DELETE FROM events WHERE project_id = ?').run(id);
+    
+    // 6. Delete all communications for this project
+    db.prepare('DELETE FROM communications WHERE project_id = ?').run(id);
+    
+    // 7. Delete all token usage records for this project
+    db.prepare('DELETE FROM token_usage WHERE project_id = ?').run(id);
+    
+    // 8. Finally, delete the project itself
+    db.prepare('DELETE FROM projects WHERE id = ?').run(id);
+    
+    return { success: true, id, deleted: { 
+      project: project.name,
+      cascaded: ['tasks', 'task_logs', 'task_reports', 'agent_projects', 'events', 'communications', 'token_usage']
+    }};
+  });
 }

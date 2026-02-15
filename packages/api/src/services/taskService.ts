@@ -1,6 +1,6 @@
 import { getDb } from '../db/client.js';
 import { nanoid } from 'nanoid';
-import type { Task, TaskDetail, TaskLog } from '@relay-layer/shared';
+import type { Task, TaskDetail, TaskLog, TaskReport } from '@relay-layer/shared';
 
 export function listTasks(projectId?: string, status?: string): Task[] {
   const db = getDb();
@@ -18,12 +18,14 @@ export function getTask(id: string): TaskDetail | null {
   const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id) as Task | undefined;
   if (!task) return null;
   const logs = db.prepare('SELECT * FROM task_logs WHERE task_id = ? ORDER BY created_at ASC').all(id) as TaskLog[];
+  const reports = db.prepare('SELECT * FROM task_reports WHERE task_id = ? ORDER BY created_at DESC').all(id) as TaskReport[];
   const subtasks = db.prepare('SELECT * FROM tasks WHERE parent_task_id = ? ORDER BY created_at ASC').all(id) as Task[];
   const agent = task.assigned_to ? db.prepare('SELECT name FROM agents WHERE id = ?').get(task.assigned_to) as { name: string } | undefined : undefined;
   return {
     ...task,
     tags: task.tags ? JSON.parse(task.tags as unknown as string) : null,
     logs: logs.map(l => ({ ...l, artifacts: l.artifacts ? JSON.parse(l.artifacts as unknown as string) : null })),
+    reports: reports.map(r => ({ ...r, artifacts: r.artifacts ? JSON.parse(r.artifacts as unknown as string) : null })),
     subtasks: subtasks.map(s => ({ ...s, tags: s.tags ? JSON.parse(s.tags as unknown as string) : null })),
     agent_name: agent?.name,
   };
@@ -88,6 +90,16 @@ export function addTaskLog(taskId: string, data: { stage?: string; message: stri
   }
 
   return db.prepare('SELECT * FROM task_logs WHERE id = ?').get(id) as TaskLog;
+}
+
+export function addTaskReport(taskId: string, data: { agentId: string; agentName: string; content: string; artifacts?: unknown[] }): TaskReport {
+  const db = getDb();
+  const id = `rpt_${nanoid(12)}`;
+  db.prepare(
+    `INSERT INTO task_reports (id, task_id, agent_id, agent_name, content, artifacts) VALUES (?, ?, ?, ?, ?, ?)`
+  ).run(id, taskId, data.agentId, data.agentName, data.content, data.artifacts ? JSON.stringify(data.artifacts) : null);
+
+  return db.prepare('SELECT * FROM task_reports WHERE id = ?').get(id) as TaskReport;
 }
 
 export function getLiveTasks(): Task[] {

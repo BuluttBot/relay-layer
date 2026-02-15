@@ -1,13 +1,28 @@
 'use client';
-import { useAgentStore } from '@/stores/agentStore';
+import { useState, useMemo } from 'react';
+import { useAgentStore, type Agent } from '@/stores/agentStore';
+import { useProjectStore } from '@/stores/projectStore';
 import { useUIStore } from '@/stores/uiStore';
 import AgentCard from './AgentCard';
+import AgentDetailsModal from '../modals/AgentDetailsModal';
 import { Users, X } from 'lucide-react';
 
 export default function AgentsSidebar() {
   const agents = useAgentStore(s => s.agents);
+  const { projects, activeProjectId } = useProjectStore();
   const open = useUIStore(s => s.agentsSidebarOpen);
   const close = useUIStore(s => s.close);
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+
+  const activeProject = useMemo(() => 
+    projects.find(p => p.id === activeProjectId),
+    [projects, activeProjectId]
+  );
+
+  const filteredAgents = useMemo(() => {
+    if (!activeProject) return agents;
+    return agents.filter(agent => activeProject.agents.includes(agent.id));
+  }, [agents, activeProject]);
 
   if (!open) return null;
 
@@ -33,8 +48,8 @@ export default function AgentsSidebar() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
           <div className="flex items-center gap-2">
             <Users size={16} className="text-text-secondary" />
-            <span className="text-sm font-medium text-text-primary">Agents</span>
-            <span className="text-xs text-text-tertiary bg-bg-surface px-1.5 py-0.5 rounded-full">{agents.length}</span>
+            <span className="text-sm font-medium text-text-primary">Members</span>
+            <span className="text-xs text-text-tertiary bg-bg-surface px-1.5 py-0.5 rounded-full">{filteredAgents.length}</span>
           </div>
           <button 
             onClick={() => close('agentsSidebarOpen')} 
@@ -44,11 +59,27 @@ export default function AgentsSidebar() {
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
-          {agents.map(agent => (
-            <AgentCard key={agent.id} agent={agent} />
-          ))}
+          {filteredAgents.length > 0 ? (
+            filteredAgents.map(agent => (
+              <AgentCard 
+                key={agent.id} 
+                agent={agent} 
+                onClick={() => setSelectedAgent(agent)}
+              />
+            ))
+          ) : (
+            <div className="text-center py-8 text-text-tertiary text-sm">
+              No members in this project
+            </div>
+          )}
         </div>
       </aside>
+
+      <AgentDetailsModal 
+        agent={selectedAgent}
+        isOpen={!!selectedAgent}
+        onClose={() => setSelectedAgent(null)}
+      />
     </>
   );
 }

@@ -35,6 +35,12 @@ export default function Card({ task, onClick }: CardProps) {
         </div>
       )}
 
+      {task.progress >= 100 && (
+        <div className="w-full h-1.5 bg-bg-surface rounded-full mb-3 overflow-hidden">
+          <div className="h-full bg-accent-teal w-full" />
+        </div>
+      )}
+
       <div className="flex items-center justify-between text-xs text-text-tertiary">
         <div className="flex items-center gap-1.5">
           {agent && (

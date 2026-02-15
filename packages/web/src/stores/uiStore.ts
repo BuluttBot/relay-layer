@@ -6,6 +6,7 @@ interface UIStore {
   agentsSidebarOpen: boolean;
   chatViewerOpen: boolean;
   statsOpen: boolean;
+  reportsOpen: boolean;
   broadcastModalOpen: boolean;
   taskDetailOpen: boolean;
   toggle: (key: keyof Omit<UIStore, 'toggle' | 'close'>) => void;
@@ -17,6 +18,7 @@ export const useUIStore = create<UIStore>((set) => ({
   agentsSidebarOpen: true,
   chatViewerOpen: false,
   statsOpen: false,
+  reportsOpen: false,
   broadcastModalOpen: false,
   taskDetailOpen: false,
 

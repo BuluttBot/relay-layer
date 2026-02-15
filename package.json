@@ -5,17 +5,21 @@
   "workspaces": [
     "packages/shared",
     "packages/api",
-    "packages/web"
+    "packages/web",
+    "packages/worker"
   ],
   "scripts": {
     "dev:api": "npm run dev -w packages/api",
     "dev:web": "npm run dev -w packages/web",
+    "dev:worker": "npm run dev -w packages/worker",
     "build:shared": "npm run build -w packages/shared",
     "build:api": "npm run build -w packages/api",
     "build:web": "npm run build -w packages/web",
-    "build": "npm run build:shared && npm run build:api && npm run build:web",
+    "build:worker": "npm run build -w packages/worker",
+    "build": "npm run build:shared && npm run build:api && npm run build:web && npm run build:worker",
     "start:api": "npm run start -w packages/api",
     "start:web": "npm run start -w packages/web",
+    "start:worker": "npm run start -w packages/worker",
     "db:init": "npm run db:init -w packages/api"
   }
 }

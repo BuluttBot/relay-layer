@@ -24,6 +24,7 @@ export interface Task {
   published_at: string | null;
   agent_name?: string;
   logs?: any[];
+  reports?: any[];
   subtasks?: Task[];
 }
 

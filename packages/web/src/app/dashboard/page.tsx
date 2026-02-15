@@ -9,6 +9,7 @@ import Board from '@/components/kanban/Board';
 import DetailModal from '@/components/task/DetailModal';
 import BroadcastModal from '@/components/broadcast/BroadcastModal';
 import StatsPanel from '@/components/stats/StatsPanel';
+import ReportsModal from '@/components/modals/ReportsModal';
 import ChatViewer from '@/components/chat/ChatViewer';
 
 export default function DashboardPage() {
@@ -37,6 +38,7 @@ export default function DashboardPage() {
       <DetailModal />
       <BroadcastModal />
       <StatsPanel />
+      <ReportsModal />
       <ChatViewer />
     </>
   );

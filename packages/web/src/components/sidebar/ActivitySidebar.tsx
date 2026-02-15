@@ -59,13 +59,24 @@ export default function ActivitySidebar() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-text-primary">
                     <span className="font-medium">{event.source_agent_name}</span>
+                    {event.payload?.target_agent_name && (
+                      <>
+                        <span className="text-text-tertiary mx-1">→</span>
+                        <span className="font-medium">{event.payload.target_agent_name}</span>
+                      </>
+                    )}
                     {' '}
-                    <span className="text-text-secondary">{event.type.split('.')[1]?.replace('_', ' ')}</span>
+                    <span className="text-text-secondary text-xs ml-1 opacity-70">
+                      {event.type.split('.')[1]?.replace('_', ' ')}
+                    </span>
                   </p>
-                  {event.payload?.title && (
-                    <p className="text-xs text-text-secondary mt-0.5 truncate">{event.payload.title as string}</p>
+                  {event.payload?.content && (
+                    <p className="text-xs text-text-secondary mt-0.5 truncate italic">"{event.payload.content}"</p>
                   )}
-                  <p className="text-xs text-text-tertiary mt-1">{timeAgo(event.timestamp)}</p>
+                  {event.payload?.title && !event.payload?.content && (
+                    <p className="text-xs text-text-secondary mt-0.5 truncate">{event.payload.title}</p>
+                  )}
+                  <p className="text-[10px] text-text-tertiary mt-1 text-right">{timeAgo(event.timestamp)}</p>
                 </div>
               </div>
             ))

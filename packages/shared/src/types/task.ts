@@ -38,8 +38,19 @@ export interface TaskArtifact {
   action?: string;
 }
 
+export interface TaskReport {
+  id: string;
+  task_id: string;
+  agent_id: string;
+  agent_name: string;
+  content: string;
+  artifacts: TaskArtifact[] | null;
+  created_at: string;
+}
+
 export interface TaskDetail extends Task {
   logs: TaskLog[];
+  reports: TaskReport[];
   subtasks: Task[];
   agent_name?: string;
 }
